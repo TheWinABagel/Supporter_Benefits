@@ -18,8 +18,9 @@ public class PlayerManager {
     public static List<GameProfile> PLAYERS = new ArrayList<>();
 
     public static void init() {
-       if (SBConfig.enable_URL_loading) {
-            ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            if (SBConfig.enable_URL_loading) {
                 new Thread(() -> {
                     SupporterBenefits.LOGGER.info("Loading supporter data...");
                     try {
@@ -47,13 +48,11 @@ public class PlayerManager {
                     } catch (Exception k) {
                         SupporterBenefits.LOGGER.error("File at {} does not seem to exist!", SBConfig.custom_URL);
                     }
-
+                    SupporterBenefits.LOGGER.info("Loaded {} supporter names from URL.", PLAYERS.size());
                 }, "Supporter Benefits").start();
-                initConfigPlayers(server);
-            });
-        }
-
-        SupporterBenefits.LOGGER.info("Loaded {} supporter names.", PLAYERS.size());
+            }
+            initConfigPlayers(server);
+        });
     }
 
     private static void initConfigPlayers(MinecraftServer server) {
@@ -71,6 +70,7 @@ public class PlayerManager {
                 SupporterBenefits.LOGGER.error("Player name {} is not valid!", s);
             }
         }
+        SupporterBenefits.LOGGER.info("Loaded {} supporter names from config.", SBConfig.custom_players.size());
         PLAYERS.addAll(profileList);
     }
 }

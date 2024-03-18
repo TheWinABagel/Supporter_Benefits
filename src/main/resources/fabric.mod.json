@@ -3,15 +3,14 @@
 	"id": "supporter-benefits",
 	"version": "${version}",
 	"name": "Supporter Benefits",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Adds the ability for server owners to make server slots for custom players, such as donators.",
 	"authors": [
-		"Me!"
+		"TheWinABagel"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/TheWinABagel/Supporter_Benefits"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/supporter-benefits/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -34,8 +33,5 @@
 		"minecraft": "~1.20.1",
 		"java": ">=17",
 		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
 	}
 }
