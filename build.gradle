@@ -12,6 +12,7 @@ base {
 
 repositories {
 	maven { url = 'https://maven.parchmentmc.org' }
+	mavenCentral()
 }
 
 dependencies {
@@ -23,7 +24,7 @@ dependencies {
 
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
+	modImplementation "com.ptsmods:devlogin:3.4.1"
 }
 
 processResources {
@@ -36,6 +37,18 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.release = 17
+}
+
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"supporter-benefits" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+
 }
 
 java {

@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"package": "dev.bagel.benefits.mixin.client",
+	"compatibilityLevel": "JAVA_17",
+	"client": [
+		"ServerSelectionListMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"mixins": [
+	]
+}

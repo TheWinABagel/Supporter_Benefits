@@ -1,5 +1,9 @@
 package dev.bagel.benefits;
 
+import com.mojang.authlib.GameProfile;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.server.players.GameProfileCache;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,34 +12,43 @@ import java.util.*;
 
 public class PlayerManager {
 
-    public static List<String> PLAYER_NAMES = new ArrayList<>();
-    public static String URL_STRING = "https://raw.githubusercontent.com/TheWinABagel/FakerLib/master/TestWings.txt";
+    public static List<GameProfile> PLAYERS = new ArrayList<>();
+    public static String URL_STRING = "https://raw.githubusercontent.com/TheWinABagel/Supporter_Benefits/master/Players.txt";
+    public static int BONUS_SLOTS = 5;
+
     public static void init() {
-        new Thread(() -> {
-            SupporterBenefits.LOGGER.info("Loading patreon wing data...");
-            try {
-                URL url = new URL(URL_STRING);
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
-                    String s;
-                    while ((s = reader.readLine()) != null) {
-                        String[] split = s.split(" ", 2);
-                        if (split.length != 2) {
-                            SupporterBenefits.LOGGER.error("Invalid patreon wing entry {} will be ignored.", s);
-                            continue;
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            new Thread(() -> {
+                SupporterBenefits.LOGGER.info("Loading supporter data...");
+                try {
+                    URL url = new URL(URL_STRING);
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+                        String s;
+                        GameProfileCache cache = server.getProfileCache();
+                        if (cache == null) {
+                            SupporterBenefits.LOGGER.error("Server cache is null! Not sure why...");
+                            return;
                         }
-                        PLAYER_NAMES.add(split[0]);
+                        while ((s = reader.readLine()) != null) {
+                        Optional<GameProfile> profileOptional = cache.get(s);
+                        if (profileOptional.isPresent()) {
+                            PLAYERS.add(profileOptional.get());
+                        } else {
+                            SupporterBenefits.LOGGER.error("Player name {} is not valid!", s);
+                        }
+                        }
+                        reader.close();
                     }
-                    reader.close();
+                    catch (IOException ex) {
+                        SupporterBenefits.LOGGER.error("Exception loading supporter data!");
+                        ex.printStackTrace();
+                    }
                 }
-                catch (IOException ex) {
-                    SupporterBenefits.LOGGER.error("Exception loading patreon wing data!");
-                    ex.printStackTrace();
+                catch (Exception k) {
+                    SupporterBenefits.LOGGER.error("File at {} does not seem to exist!", URL_STRING);
                 }
-            }
-            catch (Exception k) {
-                SupporterBenefits.LOGGER.error("File at ");
-            }
-            SupporterBenefits.LOGGER.info("Loaded {} patreon wings.", PLAYER_NAMES.size());
-        }, "Placebo (FakerLib) Patreon Wing Loader").start();
+                SupporterBenefits.LOGGER.info("Loaded {} supporter names.", PLAYERS.size());
+            }, "Supporter Benefits").start();
+        });
     }
 }

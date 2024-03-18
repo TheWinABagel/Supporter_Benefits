@@ -17,10 +17,17 @@
 	"entrypoints": {
 		"main": [
 			"dev.bagel.benefits.SupporterBenefits"
+		],
+		"client": [
+			"dev.bagel.benefits.SupporterBenefitsClient"
 		]
 	},
 	"mixins": [
-		"supporter-benefits.mixins.json"
+		"supporter-benefits.mixins.json",
+		{
+			"config": "supporter-benefits.client.mixins.json",
+			"environment": "client"
+		}
 	],
 	"depends": {
 		"fabricloader": ">=0.15.7",
