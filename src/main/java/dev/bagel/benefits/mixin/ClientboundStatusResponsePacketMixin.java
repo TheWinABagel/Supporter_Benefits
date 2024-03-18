@@ -7,7 +7,6 @@ import net.minecraft.network.protocol.status.ServerStatus;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -27,6 +26,7 @@ public abstract class ClientboundStatusResponsePacketMixin {
 
     @Inject(method = "write", at = @At("TAIL"))
     private void supporterBenefits$onWritePacket(FriendlyByteBuf buffer, CallbackInfo ci) {
-        buffer.writeJsonWithCodec(SBData.CODEC, new SBData(PlayerManager.PLAYERS, PlayerManager.BONUS_SLOTS));
+        if (!SBConfig.enable_sending_packets) return;
+        buffer.writeJsonWithCodec(SBData.CODEC, new SBData(PlayerManager.PLAYERS, SBConfig.additional_slots));
     }
 }

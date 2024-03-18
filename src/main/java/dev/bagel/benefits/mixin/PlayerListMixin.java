@@ -2,6 +2,7 @@ package dev.bagel.benefits.mixin;
 
 import com.mojang.authlib.GameProfile;
 import dev.bagel.benefits.PlayerManager;
+import dev.bagel.benefits.SBConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -28,7 +29,7 @@ public abstract class PlayerListMixin {
     )
     private void supporterBenefits$modifyIfPlayerCanLogin(SocketAddress socketAddress, GameProfile gameProfile, CallbackInfoReturnable<Component> cir) {
         if (PlayerManager.PLAYERS.contains(gameProfile)) {
-            if (this.players.size() < (this.maxPlayers + PlayerManager.BONUS_SLOTS)) {
+            if (this.players.size() < (this.maxPlayers + Math.max(0, SBConfig.additional_slots))) {
                 cir.setReturnValue(null);
             }
         }

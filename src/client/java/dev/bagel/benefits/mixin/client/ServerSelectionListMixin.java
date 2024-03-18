@@ -32,7 +32,7 @@ public class ServerSelectionListMixin {
     private void SB$renderTooltip(GuiGraphics gfx, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean bl, float partialTick, CallbackInfo ci){
         int m = mouseX - left;
         int n = mouseY - top;
-        if (this.SB$patreonSizeComponent != null && m >= width - 35 && m <= width - 25 && n >= 0 && n <= 8) {
+        if (this.SB$patreonSizeComponent != null && m >= width - 30 && m <= width - 17 && n >= 0 && n <= 8) {
             Component comp = Component.translatable("supporter_benefits.info.slot_info", this.SB$increasedMax);
             this.screen.setToolTip(Collections.singletonList(comp));
         }
